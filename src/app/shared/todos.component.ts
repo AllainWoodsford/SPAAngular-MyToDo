@@ -18,4 +18,9 @@ export class ToDoListService{
         this.toDoList.splice(index, 1);
         this.toDoListSubject.next(this.toDoList);
     }
+
+    onAdd(newTask: ToDo){
+        this.toDoList.push(newTask);
+        this.toDoListSubject.next(this.toDoList);
+    }
 }
