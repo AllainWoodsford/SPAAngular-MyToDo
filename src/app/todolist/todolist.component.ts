@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ToDo } from '../shared/todo.model';
-import { ToDoListService } from '../shared/todos.component';
+import { Task } from '../shared/task.model';
+import { ToDoListService } from '../shared/todolistservice.component';
 
 @Component({
   selector: 'app-todolist',
@@ -10,22 +11,20 @@ import { ToDoListService } from '../shared/todos.component';
 })
 export class TodolistComponent implements OnInit, OnDestroy{
 
-    myToDoList: ToDo[];
-    myToDoSubscription = new Subscription();
-    constructor(private toDoListService: ToDoListService){
-      this.myToDoList = this.toDoListService.toDoList;
-
-    }
+    myList: Task[];
+    myListSubscription = new Subscription();
+    constructor(private toDoListService: ToDoListService, private router: Router){}
 
     ngOnInit(): void {
-      this.myToDoSubscription = this.toDoListService.toDoListSubject.subscribe(myToDoList => {
-        this.myToDoList = this.toDoListService.toDoList;
+      this.toDoListService.getToDoList();
+      this.myListSubscription = this.toDoListService.toDoListSubject.subscribe(list => {
+        this.myList = list;
       });
     
     }
 
     ngOnDestroy(): void {
-      this.myToDoSubscription.unsubscribe();
+      this.myListSubscription.unsubscribe();
     }
 
     onDelete(index: number) {

@@ -2,8 +2,8 @@
     <h2>To do List</h2>
     <mat-card>
         <mat-list>
-            <mat-list-item *ngFor="let toDo of myToDoList; let i = index" >
-                {{toDo.taskName}}
+            <mat-list-item *ngFor="let task of myList; let i = index" >
+                {{task.taskName}}
                 <button mat-icon-button>
                     <mat-icon>chat</mat-icon>
                 </button>

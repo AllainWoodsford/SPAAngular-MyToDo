@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToDo } from '../shared/todo.model';
-import { ToDoListService } from '../shared/todos.component';
+import { Task } from '../shared/task.model';
+import { ToDoListService } from '../shared/todolistservice.component';
 
 @Component({
   selector: 'app-todoform',
@@ -21,7 +21,7 @@ export class TodoformComponent implements OnInit{
     }
 
     onSubmit(){
-      const newTask = new ToDo(this.toDoForm.value.taskName, false, false);
+      const newTask = new Task(1,this.toDoForm.value.taskName, false, false);
       this.toDoListService.onAdd(newTask);
       this.toDoForm.reset();
     }

@@ -9,7 +9,7 @@ import { TodolistComponent } from './todolist/todolist.component';
 import { HeaderComponent } from './header/header.component';
 import { TodoformComponent } from './todoform/todoform.component';
 import { ReactiveFormsModule } from  '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,8 +23,8 @@ import { ReactiveFormsModule } from  '@angular/forms';
     AppRoutingModule,
     MaterialModule,
     FlexLayoutModule,
-    ReactiveFormsModule
-    
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
