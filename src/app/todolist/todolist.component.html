@@ -1,7 +1,10 @@
 <div  fxLayout="column"  fxLayoutAlign="center center">
     
     <h2 class="subheading">To do List</h2>
-        <div class="listContainer">
+        <div *ngIf="!isAuthenticated">
+            <h3>Please sign in to start creating To Do list items!</h3>
+        </div>
+        <div *ngIf="isAuthenticated" class="listContainer">
             <mat-list>
                 <mat-list-item *ngFor="let task of myList; let i = index" >
                     {{task.taskName}}

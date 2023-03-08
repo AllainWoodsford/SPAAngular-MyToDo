@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Subject} from 'rxjs';
 import { Task } from './task.model';
 import { HttpClient } from '@angular/common/http';
-import { endPoint } from "./api.model";
-@Injectable({providedIn:"root"})
+import { endPoint } from './api.model';
+@Injectable({providedIn:'root'})
 
 export class ToDoListService{
 

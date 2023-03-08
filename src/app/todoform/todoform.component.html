@@ -1,4 +1,6 @@
-<form [formGroup]="toDoForm" (ngSubmit)="onSubmit()" >
+<div>
+  <div *ngIf="!isAuthenticated"><a routerLink="login">login</a> to submit your tasks!</div>
+  <form *ngIf="isAuthenticated" [formGroup]="toDoForm" (ngSubmit)="onSubmit()" >
     <div class="form-group">
         <mat-form-field appearance="outline">
             <mat-label>What do you need to do?</mat-label>
@@ -12,3 +14,4 @@
           </button>
     </div>
 </form>
+</div>

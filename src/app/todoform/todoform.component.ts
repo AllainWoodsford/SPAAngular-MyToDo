@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../shared/auth.service';
+import { Subscription } from 'rxjs';
 import { Task } from '../shared/task.model';
 import { ToDoListService } from '../shared/todolist.service';
 
@@ -11,13 +13,21 @@ import { ToDoListService } from '../shared/todolist.service';
 export class TodoformComponent implements OnInit{
 
     toDoForm: FormGroup;
-
-    constructor(private toDoListService: ToDoListService) { }
+    private authenticationSub: Subscription;
+    isAuthenticated = false;
+    constructor(private toDoListService: ToDoListService, private authService: AuthService) { }
 
     ngOnInit (): void {
       this.toDoForm = new FormGroup({
         "taskName": new FormControl(null, [Validators.required])
       })
+      this.authenticationSub = this.authService.getAuthenticatedSub().subscribe(status =>{
+        this.isAuthenticated = status;
+      });
+    }
+
+    ngOnDestroy(): void{
+      this.authenticationSub.unsubscribe();
     }
 
     onSubmit(){
