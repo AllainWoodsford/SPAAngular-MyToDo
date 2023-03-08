@@ -16,6 +16,7 @@ export class TodolistComponent implements OnInit, OnDestroy{
     myListSubscription = new Subscription();
     private authenticationSub: Subscription;
     isAuthenticated = false;
+    loggedInUser ='';
 
     constructor(private toDoListService: ToDoListService, private router: Router, private authService: AuthService){}
 
@@ -28,11 +29,21 @@ export class TodolistComponent implements OnInit, OnDestroy{
         this.isAuthenticated = status;
       });
       this.isAuthenticated = this.authService.getIsAuthenticated();
+      if(this.isAuthenticated)
+      {
+        this.loggedInUser = this.authService.getLoggedInUser();
+      }
+      else{
+        this.loggedInUser = '';
+      }
     }
 
     ngOnDestroy(): void {
       this.myListSubscription.unsubscribe();
       this.authenticationSub.unsubscribe();
+      if(!this.isAuthenticated){
+        this.loggedInUser = '';
+      }
     }
 
     onDelete(index: number) {

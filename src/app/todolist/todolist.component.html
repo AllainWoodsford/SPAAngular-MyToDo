@@ -4,6 +4,9 @@
         <div *ngIf="!isAuthenticated">
             <h3>Please sign in to start creating To Do list items!</h3>
         </div>
+        <div *ngIf="isAuthenticated">
+            <h3>Hey {{loggedInUser}} what do you need to do?</h3>
+        </div>
         <div *ngIf="isAuthenticated" class="listContainer">
             <mat-list>
                 <mat-list-item *ngFor="let task of myList; let i = index" >

@@ -15,11 +15,13 @@ export class AuthInterceptor implements HttpInterceptor{
        const token = this.authService.getToken();
 
        if(!token){
+            console.log('intercept failed no token');
             return next.handle(req);
        }
 
        //Enrich request with token if it exists
        //Express middleware will recieve it
+       console.log('intercept succeeded');
        const authRequest = req.clone({
         headers: req.headers.set("authorization", token)
        });

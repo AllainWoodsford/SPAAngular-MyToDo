@@ -36,7 +36,7 @@ app.use(cors());
 //Routes ~~~~~~~~~~~~~~~~~~~~~~~
 
 app.use('/auth', authRoutes);
-app.use('/task', taskRoutes);
+app.use('/tasks', taskRoutes);
 
 
 //SERVER ~~~~~~~~~~~~~~~~~~~~~~~

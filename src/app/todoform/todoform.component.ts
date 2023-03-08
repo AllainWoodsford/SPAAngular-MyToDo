@@ -18,6 +18,8 @@ export class TodoformComponent implements OnInit{
     constructor(private toDoListService: ToDoListService, private authService: AuthService) { }
 
     ngOnInit (): void {
+      //dont just rely on subscriptions
+      this.isAuthenticated = this.authService.getIsAuthenticated();
       this.toDoForm = new FormGroup({
         "taskName": new FormControl(null, [Validators.required])
       })

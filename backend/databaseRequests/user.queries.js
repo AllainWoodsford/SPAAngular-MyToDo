@@ -12,10 +12,16 @@ class UserQueries {
         // });
     }
 
-    //Run at login
-    async findUser(targetUser){
+  
+
+    //Run at register minmised version of find user
+    async findUser(targetUser,attributes){
         try{
-            const user = await this.db.sequelize.models.users.findOne({where: {username: `${targetUser}`}});
+            const user = await this.db.sequelize.models.users.findOne({
+                where: {
+                    username: `${targetUser}`
+                }, 
+                attributes: attributes});
             if(user){
                 return user;
             }

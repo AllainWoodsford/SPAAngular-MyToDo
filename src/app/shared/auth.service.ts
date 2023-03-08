@@ -13,9 +13,16 @@ export class AuthService{
     private authenticatedSubject = new Subject<boolean>();
     private isAuthenticated = false;
     private logoutTimer: any;
-
+    private loggedInUserName = '';
     constructor(private http: HttpClient, private router:Router){}
     
+
+    getLoggedInUser(){
+        if(this.isAuthenticated && this.loggedInUserName != ''){
+            return this.loggedInUserName;
+        }
+        return '';
+    }
     getIsAuthenticated(){
         return this.isAuthenticated;
     }
@@ -71,6 +78,7 @@ export class AuthService{
         this.isAuthenticated = false;
         //push logged out to all subscribers
         this.authenticatedSubject.next(false);
+        this.loggedInUserName = '';
         //clear timeout for logout timer set to 1hour
         clearTimeout(this.logoutTimer);
         //remove token and expiration timer from local storage

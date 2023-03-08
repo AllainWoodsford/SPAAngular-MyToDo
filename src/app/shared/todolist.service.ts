@@ -16,16 +16,16 @@ export class ToDoListService{
     private toDoList: Task[] = [];
 
     onDelete(index: number){
-        console.log(`${endPoint}/task/` + index);
-       this.http.delete<{message: string}>(`${endPoint}/task/` + index).subscribe((jsonData) => {
+        console.log(`${endPoint}/tasks/task/` + index);
+       this.http.delete<{message: string}>(`${endPoint}/tasks/task/` + index).subscribe((jsonData) => {
         this.getToDoList();
        });
     }
 
     onAdd(newTask: Task){
-        this.http.get<{maxid:number}>(`${endPoint}/todolist/maxid`).subscribe((jsonData) => {
+        this.http.get<{maxid:number}>(`${endPoint}/tasks/todolist/maxid`).subscribe((jsonData) => {
             newTask.id = jsonData.maxid;
-            this.http.post<{message: string}>(`${endPoint}/task`, newTask).subscribe((jsonData) => {
+            this.http.post<{message: string}>(`${endPoint}/tasks/task`, newTask).subscribe((jsonData) => {
                 this.getToDoList();
             });
         });
@@ -33,7 +33,7 @@ export class ToDoListService{
     }
 
     getToDoList(){
-        this.http.get<{toDoList: Task[]}>(`${endPoint}/todolist`).subscribe((jsonData) => {
+        this.http.get<{toDoList: Task[]}>(`${endPoint}/tasks/todolist`).subscribe((jsonData) => {
             this.toDoList = jsonData.toDoList;
             this.toDoListSubject.next(this.toDoList);
         });
