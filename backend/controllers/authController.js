@@ -27,7 +27,7 @@ const register = async (req, res) => {
             console.log('user does not exist continue flow');
             //Continue Registration flow there is no user with the userName the person is asking for
             //Hash the password and salt
-            bcrypt.hash(password, saltRounds, function(err, hash) {
+            bcrypt.hash(password, saltRounds, async function(err, hash) {
                 if(!err)
                     {
                         console.log("hashed success");
@@ -43,22 +43,22 @@ const register = async (req, res) => {
                             adminFlag:0
                           };
                           console.log("passing Data to create model");
-                          const result = userQueries.createUser(data);
+                          const result = await userQueries.createUser(data);
                           console.log('result is: ' + result);
-                          if(result.message === 'registration success!'){
-                            res.status(201).json(result);
+                          if(result){
+                            res.status(201).json({result:true});
                           }
                           else{
                             console.log('the check wasnt right');
                             res.status(500).json({
-                                message:'something went wrong!'
+                                result:false
                             })
                           }
                     }
                     else{
                         //Something went wrong
                         res.status(500).json({
-                            message:'something went wrong!'
+                            result:false
                         })
                     }
                });

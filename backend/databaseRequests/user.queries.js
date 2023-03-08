@@ -41,16 +41,17 @@ class UserQueries {
 
             if(newUser){
                 console.log('everything went alright!');
-                return {message: 'registration success!'};
+              
+                return true;
             }
             else{
                 console.log('REGO FAILED!');
-                return {message: 'registration failed'};
+                return false;
             }
         }
         catch(err){
             console.log('ERROR IN CATCH BLOCK'+ err);
-            return {message: 'registration failed: ' + err};
+            return false;
         }
     }
 }

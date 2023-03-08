@@ -32,8 +32,13 @@ export class AuthService{
 
         const authData: AuthModel = {username: username, password: password};
         
-        this.http.post(`${endPoint}/auth/register`, authData).subscribe(res => {
+        this.http.post<{result:boolean}>(`${endPoint}/auth/register`, authData).subscribe(res => {
+            //Returns true if user gets created
             console.log(res);
+            if(res.result === true){
+                console.log('front end res is true');
+                this.router.navigate(['/login']);
+            }
         })
     }
 
