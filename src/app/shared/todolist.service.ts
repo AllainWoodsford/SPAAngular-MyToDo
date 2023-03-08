@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Subject} from 'rxjs';
 import { Task } from './task.model';
 import { HttpClient } from '@angular/common/http';
+import { endPoint } from "./api.model";
 @Injectable({providedIn:"root"})
 
 export class ToDoListService{
 
+    public maxId:number;
     constructor(private http: HttpClient){}
     
     //Observable make things more better
@@ -14,17 +16,24 @@ export class ToDoListService{
     private toDoList: Task[] = [];
 
     onDelete(index: number){
-        this.toDoList.splice(index, 1);
-        this.toDoListSubject.next(this.toDoList);
+        console.log(`${endPoint}/task/` + index);
+       this.http.delete<{message: string}>(`${endPoint}/task/` + index).subscribe((jsonData) => {
+        this.getToDoList();
+       });
     }
 
     onAdd(newTask: Task){
-        this.toDoList.push(newTask);
-        this.toDoListSubject.next(this.toDoList);
+        this.http.get<{maxid:number}>(`${endPoint}/todolist/maxid`).subscribe((jsonData) => {
+            newTask.id = jsonData.maxid;
+            this.http.post<{message: string}>(`${endPoint}/task`, newTask).subscribe((jsonData) => {
+                this.getToDoList();
+            });
+        });
+
     }
 
     getToDoList(){
-        this.http.get<{toDoList: Task[]}>('http://localhost:3000/todolist').subscribe((jsonData) => {
+        this.http.get<{toDoList: Task[]}>(`${endPoint}/todolist`).subscribe((jsonData) => {
             this.toDoList = jsonData.toDoList;
             this.toDoListSubject.next(this.toDoList);
         });

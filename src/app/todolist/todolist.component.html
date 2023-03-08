@@ -1,21 +1,23 @@
-<div fxFlex="column">
-    <h2>To do List</h2>
-    <mat-card>
-        <mat-list>
-            <mat-list-item *ngFor="let task of myList; let i = index" >
-                {{task.taskName}}
-                <button mat-icon-button>
-                    <mat-icon>chat</mat-icon>
-                </button>
-                <button mat-icon-button (click)="onDelete(i)">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </mat-list-item>
-         
-        </mat-list>
-    </mat-card>
-    <mat-card>
+<div  fxLayout="column"  fxLayoutAlign="center center">
+    
+    <h2 class="subheading">To do List</h2>
+        <div class="listContainer">
+            <mat-list>
+                <mat-list-item *ngFor="let task of myList; let i = index" >
+                    {{task.taskName}}
+                    <button mat-icon-button>
+                        <mat-icon>chat</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="onDelete(task.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-list-item>
+             
+            </mat-list>
+        </div>
+       
+
         <app-todoform></app-todoform>
-    </mat-card>
-   
+ 
+    
 </div>

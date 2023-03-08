@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Task } from '../shared/task.model';
-import { ToDoListService } from '../shared/todolistservice.component';
+import { ToDoListService } from '../shared/todolist.service';
 
 @Component({
   selector: 'app-todolist',

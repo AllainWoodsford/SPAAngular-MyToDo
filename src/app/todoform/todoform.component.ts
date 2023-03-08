@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Task } from '../shared/task.model';
-import { ToDoListService } from '../shared/todolistservice.component';
+import { ToDoListService } from '../shared/todolist.service';
 
 @Component({
   selector: 'app-todoform',
