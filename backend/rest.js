@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const bcyrpt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
 
 //Temp Data Creation
 const toDoList =  [
@@ -46,7 +48,7 @@ app.post('/task', ( req, res, next ) => {
     
     try{
         const token = req.headers.authorization;
-        jwt.verify(token, 'secretstring');
+        jwt.verify(token, process.env.JWT_SECRET);
         next();
     }
     catch(err){
@@ -122,7 +124,7 @@ app.post('login', ( req, res ) => {
 
     }   
     //passwords do match
-    const token = jwt.sign({username: userFound.username , userId: userFound._id}, 'secretstring', {expiresIn:'1h'});
+    const token = jwt.sign({username: userFound.username , userId: userFound._id}, process.env.JWT_SECRET, {expiresIn:'1h'});
     //3600 seconds in 1 hour
     return res.status(200).json({
         token:token,
