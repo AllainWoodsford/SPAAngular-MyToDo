@@ -4,7 +4,7 @@
         <ul class="nav navbar-nav" style="float:right">
             <li *ngIf="!userAuthenticated"><a routerLink="login">Login</a></li>
             <li *ngIf="!userAuthenticated"><a routerLink="register">Register</a></li>
-            <li *ngIf="userAuthenticated"><a routerLink="logout">Logout</a></li>
+            <li *ngIf="userAuthenticated"><button type="submit" (click)="logout()">Logout</button></li>
           </ul>
     </mat-toolbar>
 </header>

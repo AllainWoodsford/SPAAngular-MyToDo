@@ -123,8 +123,10 @@ app.post('login', ( req, res ) => {
     }   
     //passwords do match
     const token = jwt.sign({username: userFound.username , userId: userFound._id}, 'secretstring', {expiresIn:'1h'});
+    //3600 seconds in 1 hour
     return res.status(200).json({
-        token:token
+        token:token,
+        expiresIn:3600
     })
 
     //.catch

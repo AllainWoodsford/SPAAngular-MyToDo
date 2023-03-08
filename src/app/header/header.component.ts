@@ -14,6 +14,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService){ }
 
   ngOnInit(): void{
+    //Not just relying on subscription to tell us if we are logged in or not, because the header might not have loaded before 
+    //The app pushed out the subscription
+    this.userAuthenticated = this.authService.getIsAuthenticated();
     this.authenticationSub = this.authService.getAuthenticatedSub().subscribe(status => {
       this.userAuthenticated = status;
     })
@@ -21,5 +24,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void{
     this.authenticationSub.unsubscribe();
+  }
+
+  logout(){
+    this.authService.logout();
   }
 }
