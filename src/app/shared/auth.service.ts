@@ -32,7 +32,7 @@ export class AuthService{
 
         const authData: AuthModel = {username: username, password: password};
         
-        this.http.post(`${endPoint}/register/`, authData).subscribe(res => {
+        this.http.post(`${endPoint}/auth/register`, authData).subscribe(res => {
             console.log(res);
         })
     }
@@ -40,7 +40,7 @@ export class AuthService{
     loginUser(username: string, password: string){
         const authData: AuthModel = {username: username, password: password};
 
-        this.http.post<{token: string, expiresIn: number}>(`${endPoint}/login`, authData).subscribe(res => {
+        this.http.post<{token: string, expiresIn: number}>(`${endPoint}/auth/login`, authData).subscribe(res => {
             console.log(res);
             this.token = res.token;
             if(this.token){
