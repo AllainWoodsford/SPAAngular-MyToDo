@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getList } = require('../controllers/taskController.js');
+const { getList, createTask } = require('../controllers/taskController.js');
 const { verifyToken } = require('../middleware/auth.js');
 //Temp Data Creation
 const toDoList =  [
@@ -11,48 +11,9 @@ const toDoList =  [
 
 //Get Routes
 router.get('/todolist/:id', verifyToken, getList);
-// router.get('/todolist',( req, res, next) => {
-//     res.json({'toDoList': toDoList});
-// });
-
-router.get('/todolist/maxid', ( req, res ) => {
-    let max = 0;
-    for(var i = 0; i < toDoList.length ; i++){
-     
-        if(toDoList[i].id > max){
-         
-            max = toDoList[i].id;
-        }
-    }
-    max += 1;
- 
-    res.json({'maxid': max});
-});
 
 //Post Routes
-router.post('/task', ( req, res, next ) => {
-    
-    try{
-        const token = req.headers.authorization;
-        jwt.verify(token, process.env.JWT_SECRET);
-        next();
-    }
-    catch(err){
-        res.status(401).json({
-            message:"Unauthorized"
-        })
-    }
-    
-
-},(req,res) => {
-    //write to create Task in DB
-    const data = req.body;
-    toDoList.push({id: data.id, taskName: data.taskName, isDone: data.isDone , isTranslated: data.isTranslated});
-    res.status(200).json({
-        message: 'Task posted'
-    });
-    }
-);
+router.post('/task', verifyToken, createTask);
 
 
 //Danger Zone

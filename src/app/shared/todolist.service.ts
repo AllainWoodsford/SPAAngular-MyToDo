@@ -17,7 +17,10 @@ export class ToDoListService{
     //Observable make things more better
     
     public toDoListSubject = new Subject<Task[]>();
+    public targetListSubject = new Subject<number>();
+
     private toDoList: Task[] = [];
+    private targetList = -1;
 
     onDelete(index: number){
         if(this.authService.getIsAuthenticated() === true){
@@ -32,15 +35,20 @@ export class ToDoListService{
 
     onAdd(newTask: Task){
         if(this.authService.getIsAuthenticated() === true){
-            this.http.get<{maxid:number}>(`${endPoint}/tasks/todolist/maxid`).subscribe((jsonData) => {
-                newTask.id = jsonData.maxid;
                 this.http.post<{message: string}>(`${endPoint}/tasks/task`, newTask).subscribe((jsonData) => {
                     this.getToDoList();
-                });
             });
         }
      
 
+    }
+    //Gets ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    getTargetListSub(){
+        return this.targetListSubject;
+    }
+    getTargetList(){
+        return this.targetList;
     }
 
     getToDoList(){
@@ -51,7 +59,9 @@ export class ToDoListService{
             this.http.get<{toDoList: Task[], targetList: number}>(`${endPoint}/tasks/todolist/` + data).subscribe((jsonData) => {
                 //if targetList returns a -1 that means list creation failed when we go to post a new task with the -1
                 //maybe we'll try to fetch an id
+                this.targetList = jsonData.targetList;
                 this.toDoList = jsonData.toDoList;
+                this.targetListSubject.next(this.targetList);
                 this.toDoListSubject.next(this.toDoList);
             });
         }

@@ -1,5 +1,6 @@
 const taskQueries = require('../databaseRequests/task.queries.js');
 const listQueries = require('../databaseRequests/list.queries.js');
+const { toInteger } = require('lodash');
 
 //checks if a user has a list if they don't creates a default one
 const getList = async (req,res) => {
@@ -77,4 +78,40 @@ const getList = async (req,res) => {
     }
 };
 
-module.exports = { getList};
+//Create a new task if logged in
+const createTask = async (req, res) => {
+    console.log(req.body);
+    const listId = toInteger(req.body.id);
+    if(listId === -1){
+       //bad request no list id 
+        res.status(400).json({
+        message: 'Target list is not set, try re-logging'
+    }); 
+    }
+    else{
+         const data = {
+        listId: listId,
+        taskName: req.body.taskName,
+        isTranslated: false,
+        isDone: false
+    };
+    
+    const newTask = taskQueries.createTask(data);
+    if(newTask != null){
+        res.status(200).json({
+            message: 'Task posted'
+        });
+    }
+    else{
+        res.status(500).json({
+            message: 'Task failed to create'
+        });
+    }
+
+    
+    }
+
+   
+};
+
+module.exports = { getList , createTask};

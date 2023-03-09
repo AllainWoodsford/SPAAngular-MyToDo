@@ -48,8 +48,8 @@ class ListQueries {
            
             const foundList = await this.db.sequelize.models.lists.findOne({
                 where: {
-                    userid: `${data}`,
-                    listName: 'default'
+                   userid:data,
+                   listName:'default'
                 }, 
                 attributes: attributes}
             );

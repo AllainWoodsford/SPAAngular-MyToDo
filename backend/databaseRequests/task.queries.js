@@ -24,7 +24,7 @@ class TaskQueries {
             });
 
             if(newTask){
-                console.log('everything went alright!');
+               
               
                 return newTask;
             }
@@ -47,11 +47,11 @@ class TaskQueries {
                 where: {listId: data},
                 attributes:{attributes}
             });
-            console.log(allTasks);
+         
             return allTasks;
         }
         catch(err){
-            console.log('Error in catch block getAllTasks' + err);
+         
             return [];
         }
     }
