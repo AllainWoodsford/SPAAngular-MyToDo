@@ -8,17 +8,22 @@ import { Router } from '@angular/router';
 @Injectable({providedIn:'root'})
 export class AuthService{
 
-    private token: string;
+    
     //Subject sets to true when user logs in for other components to subscribe to
     private authenticatedSubject = new Subject<boolean>();
+    //Subject for logged in users Id as a string to query the db
+    private userSubject = new Subject<string>();
+    //Decided by token and grabbing values from local storage
     private isAuthenticated = false;
     private logoutTimer: any;
     private loggedInUserName = '';
+    private token: string;
+    
     constructor(private http: HttpClient, private router:Router){}
     
 
     getLoggedInUser(){
-        if(this.isAuthenticated && this.loggedInUserName != ''){
+        if(this.isAuthenticated && this.loggedInUserName !=''){
             return this.loggedInUserName;
         }
         return '';
@@ -29,6 +34,10 @@ export class AuthService{
 
     getAuthenticatedSub(){
         return this.authenticatedSubject.asObservable();
+    }
+
+    getUserSub(){
+        return this.userSubject.asObservable();
     }
 
     getToken(){
@@ -52,14 +61,16 @@ export class AuthService{
     loginUser(username: string, password: string){
         const authData: AuthModel = {username: username, password: password};
 
-        this.http.post<{token: string, expiresIn: number}>(`${endPoint}/auth/login`, authData).subscribe(res => {
+        this.http.post<{token: string, expiresIn: number, userid: string}>(`${endPoint}/auth/login`, authData).subscribe(res => {
             console.log(res);
             this.token = res.token;
             if(this.token){
                 //emits value of logged in to all subscribers if token exists
                 this.authenticatedSubject.next(true);
+                this.userSubject.next(res.userid);
+
                 this.isAuthenticated = true;
-                this.router.navigate(['/']);
+                this.loggedInUserName = res.userid;
                 //Set method to call then pass in time required before triggering it
                 this.logoutTimer = setTimeout(() => {
                     this.logout()
@@ -67,7 +78,8 @@ export class AuthService{
                 //multiply by 1000 to convert from seconds to milliseconds
                 const now = new Date();
                 const expiresDate = new Date(now.getTime() + (res.expiresIn * 1000));
-                this.storeLoginDetails(this.token, expiresDate);
+                this.storeLoginDetails(this.token, expiresDate, this.loggedInUserName);
+                this.router.navigate(['/']);
             }
         })
     }
@@ -76,9 +88,10 @@ export class AuthService{
     logout(){
         this.token = '';
         this.isAuthenticated = false;
+        this.loggedInUserName = '';
         //push logged out to all subscribers
         this.authenticatedSubject.next(false);
-        this.loggedInUserName = '';
+        this.userSubject.next('');
         //clear timeout for logout timer set to 1hour
         clearTimeout(this.logoutTimer);
         //remove token and expiration timer from local storage
@@ -87,29 +100,34 @@ export class AuthService{
     }
 
     //Persist authentication in the browser so token is not destroyed on refresh
-    storeLoginDetails(token: string, expirationDate: Date){
+    storeLoginDetails(token: string, expirationDate: Date, userid: string){
+        console.log('attempt to store local userid' + userid);
         localStorage.setItem('token', token);
         //ISOString serialized version of date
         localStorage.setItem('expiresIn', expirationDate.toISOString());
+        localStorage.setItem('userid', userid);
     }
 
     //Called on Logout, clears token and expiration date from local storage
     clearLoginDetails(){
         localStorage.removeItem('token');
         localStorage.removeItem('expiresIn');
+        localStorage.removeItem('userid');
     }
 
     //will be called by authenticateFromLocalStorage to get an existing token in local storage
     getLocalStorageData(){
        const token = localStorage.getItem('token');
        const expiresIn = localStorage.getItem('expiresIn');
-
-       if(!token || !expiresIn){
+       const userid = localStorage.getItem('userid');
+        console.log('from local storage: '+ userid);
+       if(!token || !expiresIn || !userid){
         return;
        }
        return{
         'token': token,
-        'expiresIn': new Date(expiresIn)
+        'expiresIn': new Date(expiresIn),
+        'userid': userid
        };
     }
 
@@ -123,6 +141,8 @@ export class AuthService{
             const expiresIn = localStorageData.expiresIn.getTime() - now.getTime();
             if(expiresIn > 0){
                 this.token = localStorageData.token;
+                this.loggedInUserName = localStorageData.userid;
+               console.log(this.token);
                 this.isAuthenticated = true;
                 this.authenticatedSubject.next(true);
                 //Divide by 1000 to convert from milliseconds to seconds

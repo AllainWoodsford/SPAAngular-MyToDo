@@ -42,14 +42,14 @@ const register = async (req, res) => {
                             translationTarget: 'jpn',
                             adminFlag:0
                           };
-                          console.log("passing Data to create model");
+                        
                           const result = await userQueries.createUser(data);
-                          console.log('result is: ' + result);
+                       
                           if(result){
                             res.status(201).json({result:true});
                           }
                           else{
-                            console.log('the check wasnt right');
+                         
                             res.status(500).json({
                                 result:false
                             })
@@ -78,11 +78,10 @@ const login = async (req,res) => {
     //Get the object from PostGRES if it exists compare the password if not return error
     //if user return re
     const userName = _.toLower(req.body.username).replaceAll(' ','');
-   
     
     //Find out if the userame exists in the Database already after removing spaces and toLower
     //ToDO get some login attempts and lockout action going
-    const user = await userQueries.findUser(userName, ['username','password']);
+    const user = await userQueries.findUser(userName, ['username','password','userid']);
    // .then(user => {
     if(!user)
     {
@@ -91,8 +90,6 @@ const login = async (req,res) => {
             });
       
     }
-    //.then result => {}
-    //check password if user
     if(user){
         userFound = user;
         return bcrypt.compare(req.body.password, user.password).then( isMatch =>{
@@ -100,9 +97,17 @@ const login = async (req,res) => {
                 //credentials are correct
                 const token = jwt.sign({username: userFound.username , userId: userFound.userid}, process.env.JWT_SECRET, {expiresIn:'1h'});
                 //3600 seconds in 1 hour
+                //Convert to string because thats what the Front end is expecting
+                //Choosing ID instead of username because its less information in a way
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+                console.log(userFound);
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+                const id = (userFound.userid).toString();
+                console.log('id to send in RES '+id);
                 return res.status(200).json({
                     token:token,
-                    expiresIn:3600
+                    expiresIn:3600,
+                    userid: id
                 });
             }
             else {

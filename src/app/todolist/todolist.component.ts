@@ -21,21 +21,22 @@ export class TodolistComponent implements OnInit, OnDestroy{
     constructor(private toDoListService: ToDoListService, private router: Router, private authService: AuthService){}
 
     ngOnInit(): void {
-      this.toDoListService.getToDoList();
-      this.myListSubscription = this.toDoListService.toDoListSubject.subscribe(list => {
-        this.myList = list;
-      });
       this.authenticationSub = this.authService.getAuthenticatedSub().subscribe(status => {
         this.isAuthenticated = status;
       });
       this.isAuthenticated = this.authService.getIsAuthenticated();
       if(this.isAuthenticated)
       {
+       
         this.loggedInUser = this.authService.getLoggedInUser();
       }
       else{
         this.loggedInUser = '';
       }
+      this.toDoListService.getToDoList();
+      this.myListSubscription = this.toDoListService.toDoListSubject.subscribe(list => {
+        this.myList = list;
+      });
     }
 
     ngOnDestroy(): void {

@@ -1,11 +1,13 @@
 const { connect } = require('../dbSequelize.js');
-
+const user = require('../model/user.js');
+const listQueries = require('./list.queries');
+const taskQueries = require('./task.queries');
 class UserQueries {
     db = {};
 
     constructor() {
         this.db = connect();
-        //For Development if { force: true } drops table if it exists incase fields need to change
+      //  For Development if { force: true } drops table if it exists incase fields need to change
 
         // this.db.sequelize.sync({ force: true } ).then(() => {
         //     console.log("Drop and re-sync db.");
@@ -36,6 +38,7 @@ class UserQueries {
     //Create user at register
     async createUser(data){
         try{
+          
             const newUser = await this.db.sequelize.models.users.create({
                 username: data.username,
                 password: data.password,
@@ -45,13 +48,12 @@ class UserQueries {
                 adminFlag: data.adminFlag
             });
 
-            if(newUser){
-                console.log('everything went alright!');
-              
-                return true;
+            if(newUser) { 
+
+                return true;      
             }
-            else{
-                console.log('REGO FAILED!');
+            else {
+
                 return false;
             }
         }

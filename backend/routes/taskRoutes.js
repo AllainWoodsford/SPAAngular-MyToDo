@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
+const { getList } = require('../controllers/taskController.js');
+const { verifyToken } = require('../middleware/auth.js');
 //Temp Data Creation
 const toDoList =  [
     {id: 1, taskName: 'Buy groceries', isDone: false , isTranslated: false},
@@ -9,9 +10,10 @@ const toDoList =  [
 ];
 
 //Get Routes
-router.get('/todolist',( req, res, next) => {
-    res.json({'toDoList': toDoList});
-});
+router.get('/todolist/:id', verifyToken, getList);
+// router.get('/todolist',( req, res, next) => {
+//     res.json({'toDoList': toDoList});
+// });
 
 router.get('/todolist/maxid', ( req, res ) => {
     let max = 0;
