@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getList, createTask } = require('../controllers/taskController.js');
+const { getList, createTask, deleteTask } = require('../controllers/taskController.js');
 const { verifyToken } = require('../middleware/auth.js');
 //Temp Data Creation
 const toDoList =  [
@@ -18,27 +18,6 @@ router.post('/task', verifyToken, createTask);
 
 //Danger Zone
 //Delete Routes
-router.delete('/task/:id', ( req, res ) => {
- 
+router.delete('/task/:id' , verifyToken, deleteTask);
 
-    let index = -1;
-    index = toDoList.findIndex(el => {
-     
-        return el.id == req.params.id;
-    });
-    if(index != -1){
-   
-        toDoList.splice(index,1);
-      
-        res.status(200).json({
-            message: 'Task deleted'
-        });
-    }
-    else{
-        res.status(400).json({
-            message: 'No task with id param found'
-        });
-    }
-
-});
 module.exports = router;

@@ -12,7 +12,7 @@ import { ToDoListService } from '../shared/todolist.service';
 })
 export class TodolistComponent implements OnInit, OnDestroy{
 
-    myList: Task[];
+    myList: Task[] = [];
     myListSubscription = new Subscription();
     private authenticationSub: Subscription;
     isAuthenticated = false;
@@ -47,8 +47,43 @@ export class TodolistComponent implements OnInit, OnDestroy{
       }
     }
 
+    getDone(index: number){
+      if(!this.getListInit() ){
+        let task = this.toDoListService.getSpecificTask(index);
+        if(task){
+          return task.isDone;
+        }
+       return false;
+      }
+      else{
+        return false;
+      }
+    }
+
+    getDeleteButtonIcon(index: number){
+      if(!this.getDone(index)){
+        return 'delete'
+      }
+      else{
+        return 'autorenew'
+      }
+    }
+
+    getListInit(){
+      return this.toDoListService.initalized;
+   
+    }
+
     onDelete(index: number) {
-      this.toDoListService.onDelete(index);
+     if(!this.getDone(index)){
+      
+      this.toDoListService.setTaskDone(index, true);
+      let result = this.toDoListService.onDelete(index);
+      if(!result){
+        this.toDoListService.setTaskDone(index,false);
+      }
+     }
+   
       
     }
 }

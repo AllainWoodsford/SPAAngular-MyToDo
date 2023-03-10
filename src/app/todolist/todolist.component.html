@@ -1,27 +1,33 @@
 <div  fxLayout="column"  fxLayoutAlign="center center">
     
     <h2 class="subheading">To do List</h2>
-        <div *ngIf="!isAuthenticated">
-            <h3>Please sign in to start creating To Do list items!</h3>
+        <div *ngIf="!getListInit()">
+            <h3>List should be loading from database...</h3>
         </div>
-        <div *ngIf="isAuthenticated">
+        <div *ngIf="getListInit()">
             <h3>Hey {{loggedInUser}} what do you need to do?</h3>
         </div>
-        <div *ngIf="isAuthenticated" class="listContainer">
-            <mat-list>
-                <mat-list-item *ngFor="let task of myList; let i = index" >
-                    {{task.taskName}}
-                    <button mat-icon-button>
-                        <mat-icon>chat</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="onDelete(task.id)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </mat-list-item>
+        <div *ngIf="getListInit()" class="listContainer">
+            <ul class="list">
+                <li class="fullWidth listItem" fxLayout="row"  fxLayoutAlign="space-between"  *ngFor="let task of myList; let i = index" >
+                    <span class="listText">{{task.taskName}}</span>
+                    <div>
+                        <button mat-icon-button>
+                            <mat-icon>chat</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="onDelete(task.id)" [disabled]="getDone(task.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>    
+                    </div>
+                      
+                </li>
              
-            </mat-list>
+            </ul>
         </div>
-       
+        <div class="spinnerMargin" *ngIf="!getListInit()">
+            <mat-spinner></mat-spinner>
+        </div>
+           
 
         <app-todoform></app-todoform>
  

@@ -8,3 +8,40 @@
    flex: 4rem;
    margin-bottom: 5rem;
 }
+
+.list{
+    list-style: none;
+}
+
+.listItem{
+    display: flex;
+}
+
+.listText{
+   vertical-align: center;
+   margin-top: 12px;
+    margin-right: 1rem;
+    overflow-wrap: break-word;
+}
+
+.spinnerMargin{
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.fullWidth{
+    width:100%;
+}
+
+.halfWidth{
+    width:50%;
+}
+
+.midWith{
+    width: 70%;
+}
+
+.smallWidth{
+    width:30%;
+}
+

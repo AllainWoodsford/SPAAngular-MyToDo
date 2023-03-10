@@ -114,4 +114,26 @@ const createTask = async (req, res) => {
    
 };
 
-module.exports = { getList , createTask};
+
+//danger zone
+//delete task
+const deleteTask = async (req , res) => {
+    console.log(req.params.id);
+    const data = {
+        id: parseInt(req.params.id)
+    };
+    
+    const response = await taskQueries.deleteTask(data,['id']);
+    if(response) {
+       res.status(200).json({
+        message: 'success'
+    });
+    }
+    else{
+        res.status(404).json({
+            message: 'fail'
+        });
+    }
+}
+
+module.exports = { getList , createTask, deleteTask};
