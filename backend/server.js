@@ -7,6 +7,7 @@ const taskRoutes = require('./routes/taskRoutes.js');
 const cors = require('cors');
 const helmet = require('helmet');
 
+
 //ENV config ~~~~~~~~~~~~~~~~~~~~~~~
 
 dotenv.config();
@@ -19,6 +20,9 @@ app.use(helmet());
 
 app.use(cors());
 
+// const TOKEN_ARG = 2;
+// const tokenPath = process.argv[TOKEN_ARG];
+// process.env.GOOGLE_APPLICATION_CREDENTIALS = tokenPath;
 // app.use(( req, res, next ) => {
 //     //CORS Headers
 //     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -46,5 +50,5 @@ const PORT = process.env.PORT || 3080;
 app.listen(PORT, () => {
   console.log(`Server Running: http://localhost:${PORT}`);
   //getPostgresVersion();
- 
+
 });

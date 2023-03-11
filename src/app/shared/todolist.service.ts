@@ -10,6 +10,10 @@ import { Router } from '@angular/router';
 
 export class ToDoListService{
 
+    //TODO's
+    //Do we need to get the updated list if our requests fail? probably not.
+
+    //CONSTRUCTOR
     constructor(private http: HttpClient, private authService : AuthService, private router: Router) {}
 
     //Observable make things more better
@@ -31,6 +35,7 @@ export class ToDoListService{
     //that supplies its ID
     //this will make a delete call to the DB
     //then a get for lists
+    //makes a delete request to the API
     onDelete(index: number){
         if(this.authService.getIsAuthenticated() === true){
             this.http.delete<{message: string}>(`${endPoint}/tasks/task/` + index).subscribe((jsonData) => {
@@ -43,6 +48,21 @@ export class ToDoListService{
         }
 
         return false;
+    }
+
+    //This is a PATCH request
+    //We check if the string is empty
+    //The Task is already translated
+    //We trim the text for spaces due to per character cost $
+    //If the task exists
+    //We just need to pass the ID as a param in the URL
+    onTranslate(index : number){
+      if(this.authService.getIsAuthenticated() === true){
+        const data = {id: index};
+        this.http.patch<{message: string}>(`${endPoint}/tasks/task`, data).subscribe((jsonData) => {
+          this.getToDoList();
+        });
+      }
     }
 
     //Called from the add task button in the todoform compoent
@@ -96,6 +116,8 @@ export class ToDoListService{
 
     }
 
+    //To Check if a task is done
+    //So we don't make several requests involving the task from OnDelete
     getTaskIsDone(id:number){
         const value = this.getSpecificTask(id);
         if(value != -1)
@@ -105,8 +127,10 @@ export class ToDoListService{
         return false;
     }
 
+    //For UI feedback attempt to set task as done to disable buttons
+    //Not working so far
     setTaskDone(id: number, done: boolean){
-        let value = this.getSpecificTask(id);
+        const value = this.getSpecificTask(id);
         if(value != -1)
         {
             console.log('succeeded setting task done');
@@ -115,7 +139,9 @@ export class ToDoListService{
         }
     }
 
-
+    //This is a helper function in order to get the done status and translated status
+    //Using the task ID and itterating through the task
+    //Need to refactor to foreach
     getSpecificTask(id : number){
         console.log('attempt specified task find');
         for (let index = 0; index < this.toDoList.length; index++) {

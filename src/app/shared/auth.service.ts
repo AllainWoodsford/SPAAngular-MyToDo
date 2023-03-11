@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Injectable({providedIn:'root'})
 export class AuthService{
 
-    
+
     //Subject sets to true when user logs in for other components to subscribe to
     private authenticatedSubject = new Subject<boolean>();
     //Subject for logged in users Id as a string to query the db
@@ -18,9 +18,9 @@ export class AuthService{
     private logoutTimer: any;
     private loggedInUserName = '';
     private token: string;
-    
+
     constructor(private http: HttpClient, private router:Router){}
-    
+
 
     getLoggedInUser(){
         if(this.isAuthenticated && this.loggedInUserName !=''){
@@ -47,10 +47,9 @@ export class AuthService{
     registerUser(username: string, password: string){
 
         const authData: AuthModel = {username: username, password: password};
-        
+
         this.http.post<{result:boolean}>(`${endPoint}/auth/register`, authData).subscribe(res => {
             //Returns true if user gets created
-            console.log(res);
             if(res.result === true){
                 console.log('front end res is true');
                 this.router.navigate(['/login']);
@@ -62,7 +61,6 @@ export class AuthService{
         const authData: AuthModel = {username: username, password: password};
 
         this.http.post<{token: string, expiresIn: number, userid: string}>(`${endPoint}/auth/login`, authData).subscribe(res => {
-            console.log(res);
             this.token = res.token;
             if(this.token){
                 //emits value of logged in to all subscribers if token exists
@@ -101,7 +99,6 @@ export class AuthService{
 
     //Persist authentication in the browser so token is not destroyed on refresh
     storeLoginDetails(token: string, expirationDate: Date, userid: string){
-        console.log('attempt to store local userid' + userid);
         localStorage.setItem('token', token);
         //ISOString serialized version of date
         localStorage.setItem('expiresIn', expirationDate.toISOString());
@@ -140,9 +137,9 @@ export class AuthService{
             const now = new Date();
             const expiresIn = localStorageData.expiresIn.getTime() - now.getTime();
             if(expiresIn > 0){
+
                 this.token = localStorageData.token;
                 this.loggedInUserName = localStorageData.userid;
-               console.log(this.token);
                 this.isAuthenticated = true;
                 this.authenticatedSubject.next(true);
                 //Divide by 1000 to convert from milliseconds to seconds

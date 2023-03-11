@@ -1,5 +1,5 @@
 <div  fxLayout="column"  fxLayoutAlign="center center">
-    
+
     <h2 class="subheading">To do List</h2>
         <div *ngIf="!getListInit()">
             <h3>List should be loading from database...</h3>
@@ -12,24 +12,24 @@
                 <li class="fullWidth listItem" fxLayout="row"  fxLayoutAlign="space-between"  *ngFor="let task of myList; let i = index" >
                     <span class="listText">{{task.taskName}}</span>
                     <div>
-                        <button mat-icon-button>
+                        <button mat-icon-button (click)="onTranslate(task.id)" [disabled]="false">
                             <mat-icon>chat</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="onDelete(task.id)" [disabled]="getDone(task.id)">
-                            <mat-icon>{{getDeleteButtonIcon(task.id)}}</mat-icon>
-                        </button>    
+                        <button mat-icon-button (click)="onDelete(task.id)" [disabled]="false">
+                            <mat-icon>delete</mat-icon>
+                        </button>
                     </div>
-                      
+
                 </li>
-             
+
             </ul>
         </div>
         <div class="spinnerMargin" *ngIf="!getListInit()">
             <mat-spinner></mat-spinner>
         </div>
-           
+
 
         <app-todoform></app-todoform>
- 
-    
+
+
 </div>

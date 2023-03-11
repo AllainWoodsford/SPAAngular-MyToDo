@@ -8,6 +8,7 @@ export class RouteGuard implements CanActivate{
 
     constructor(private authService: AuthService, private router: Router){}
 
+    //We protect the home route and re-route to login if there is no token
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
         const isAuthenticated = this.authService.getIsAuthenticated();
         if(!isAuthenticated){

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getList, createTask, deleteTask } = require('../controllers/taskController.js');
+const { translateText } = require('../controllers/translateController.js');
 const { verifyToken } = require('../middleware/auth.js');
 //Temp Data Creation
 const toDoList =  [
@@ -15,6 +16,8 @@ router.get('/todolist/:id', verifyToken, getList);
 //Post Routes
 router.post('/task', verifyToken, createTask);
 
+//Patch Routes
+router.patch('/task', verifyToken, translateText);
 
 //Danger Zone
 //Delete Routes
