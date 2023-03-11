@@ -2,14 +2,13 @@
   <div *ngIf="!isAuthenticated"><a routerLink="login">login</a> to submit your tasks!</div>
   <form *ngIf="isAuthenticated" [formGroup]="toDoForm" (ngSubmit)="onSubmit()" >
     <div class="form-group">
-        <mat-form-field appearance="outline">
+        <mat-form-field>
             <mat-label>What do you need to do?</mat-label>
-            <input matInput placeholder="Add something to the list" formControlName="taskName">
-            
-            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-            <mat-hint>Hint</mat-hint>
+            <input  matInput placeholder="Add something to the list" formControlName="taskName">
+
+
           </mat-form-field>
-          <button [disabled]="!toDoForm.valid" mat-fab aria-label="Plus sign on button">
+          <button  class="backgroundWhite addTaskButton"[disabled]="!toDoForm.valid" mat-fab aria-label="Plus sign on button">
             <mat-icon>add</mat-icon>
           </button>
     </div>

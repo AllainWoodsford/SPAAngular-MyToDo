@@ -3,15 +3,26 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
+  width:100%;
+  margin-left: 1rem;
+  margin-top: 1rem;
 }
 
 .toolbar{
-  color: #2C3333;
+  background-color:  #141110;
+  width:100%;
+
 }
 
+h1{
+  color:white;
+  margin-left: 5px;
+}
 
 li {
   float: left;
+
+
 }
 
 li a {
@@ -19,6 +30,8 @@ li a {
   color: white;
   text-align: center;
   padding: 16px;
+
+
   text-decoration: underline;
 }
 
