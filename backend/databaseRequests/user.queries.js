@@ -1,7 +1,4 @@
 const { connect } = require('../dbSequelize.js');
-const user = require('../model/user.js');
-const listQueries = require('./list.queries');
-const taskQueries = require('./task.queries');
 class UserQueries {
     db = {};
 
@@ -14,7 +11,7 @@ class UserQueries {
         // });
     }
 
-  
+
 
     //Run at register minmised version of find user
     async findUser(targetUser,attributes){
@@ -22,7 +19,7 @@ class UserQueries {
             const user = await this.db.sequelize.models.users.findOne({
                 where: {
                     username: `${targetUser}`
-                }, 
+                },
                 attributes: attributes});
             if(user){
                 return user;
@@ -38,19 +35,19 @@ class UserQueries {
     //Create user at register
     async createUser(data){
         try{
-          
+
             const newUser = await this.db.sequelize.models.users.create({
                 username: data.username,
                 password: data.password,
                 createdDate: data.timeStamp,
                 translationDefault: data.translationDefault,
                 translationTarget: data.translationTarget,
-                adminFlag: data.adminFlag
+                adminFlag: 1//data.adminFlag
             });
 
-            if(newUser) { 
+            if(newUser) {
 
-                return true;      
+                return true;
             }
             else {
 

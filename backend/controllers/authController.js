@@ -10,7 +10,7 @@ const register = async (req, res) => {
         console.log(req.body);
         const userName = _.toLower(req.body.username).replaceAll(' ','');
         const password = req.body.password;
-        
+
         //Find out if the userame exists in the Database already after removing spaces and toLower
         const user = await userQueries.findUser(userName, ['username']);
 
@@ -42,14 +42,14 @@ const register = async (req, res) => {
                             translationTarget: 'jpn',
                             adminFlag:0
                           };
-                        
+
                           const result = await userQueries.createUser(data);
-                       
+
                           if(result){
                             res.status(201).json({result:true});
                           }
                           else{
-                         
+
                             res.status(500).json({
                                 result:false
                             })
@@ -63,13 +63,13 @@ const register = async (req, res) => {
                     }
                });
      }
-        
+
     } //End Try
     catch(err) {
         console.log(err.message);
         res.status(500).json({
             error: err.message
-        });       
+        });
     } //End Catch
 };
 
@@ -78,47 +78,55 @@ const login = async (req,res) => {
     //Get the object from PostGRES if it exists compare the password if not return error
     //if user return re
     const userName = _.toLower(req.body.username).replaceAll(' ','');
-    
+
     //Find out if the userame exists in the Database already after removing spaces and toLower
     //ToDO get some login attempts and lockout action going
-    const user = await userQueries.findUser(userName, ['username','password','userid']);
+    const user = await userQueries.findUser(userName, ['username','password','userid','adminFlag','lastAuthenticationDate','loginAttempts']);
    // .then(user => {
     if(!user)
     {
         return res.status(401).json({
              message: 'invalid credentials'
             });
-      
+
     }
     if(user){
-        userFound = user;
-        return bcrypt.compare(req.body.password, user.password).then( isMatch =>{
+        const userFound = user;
+        return bcrypt.compare(req.body.password, user.password).then( async isMatch =>{
             if(isMatch){
                 //credentials are correct
                 const token = jwt.sign({username: userFound.username , userId: userFound.userid}, process.env.JWT_SECRET, {expiresIn:'1h'});
                 //3600 seconds in 1 hour
                 //Convert to string because thats what the Front end is expecting
                 //Choosing ID instead of username because its less information in a way
-                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-                console.log(userFound);
-                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
                 const id = (userFound.userid).toString();
-                console.log('id to send in RES '+id);
+                const flag = userFound.adminFlag;
+                //Date and lockout workflow beginnings
+                userFound.lastAuthenticationDate = Date.now();
+                userFound.loginAttempts = 0;
+                await userFound.save();
+
                 return res.status(200).json({
                     token:token,
                     expiresIn:3600,
-                    userid: id
+                    userid: id,
+                    adminFlag: flag
                 });
+
+
             }
             else {
                 //passwords dont match
+                userFound.loginAttempts += 1;
+                await userFound.save();
                 return res.status(401).json({
                     message: 'invalid credentials'
                 });
             }
         });
     }
-    
+
 };
 
 module.exports = { register, login };
