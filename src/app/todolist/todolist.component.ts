@@ -27,7 +27,7 @@ export class TodolistComponent implements OnInit, OnDestroy{
       this.isAuthenticated = this.authService.getIsAuthenticated();
       if(this.isAuthenticated)
       {
-       
+
         this.loggedInUser = this.authService.getLoggedInUser();
       }
       else{
@@ -52,7 +52,7 @@ export class TodolistComponent implements OnInit, OnDestroy{
         return this.toDoListService.getTaskIsDone(index);
       }
       else{
-       
+
         return false;
       }
     }
@@ -70,13 +70,13 @@ export class TodolistComponent implements OnInit, OnDestroy{
     //needs to dissapear if we've at least attempted to load a list
     getListInit(){
       return this.toDoListService.initalized;
-   
+
     }
 
     onDelete(index: number) {
       //trying to disable on press no luck so far
       this.toDoListService.setTaskDone(index, true);
       this.toDoListService.onDelete(index);
-  
+
     }
 }

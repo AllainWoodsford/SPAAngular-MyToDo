@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class ToDoListService{
 
     constructor(private http: HttpClient, private authService : AuthService, private router: Router) {}
-    
+
     //Observable make things more better
     public toDoListSubject = new Subject<Task[]>();
     //For subscribers to get changes to the list
@@ -33,7 +33,6 @@ export class ToDoListService{
     //then a get for lists
     onDelete(index: number){
         if(this.authService.getIsAuthenticated() === true){
-            console.log(`${endPoint}/tasks/task/` + index);
             this.http.delete<{message: string}>(`${endPoint}/tasks/task/` + index).subscribe((jsonData) => {
              this.getToDoList();
              if(jsonData.message === 'fail'){
@@ -42,7 +41,7 @@ export class ToDoListService{
              return true;
             });
         }
-  
+
         return false;
     }
 
@@ -52,10 +51,10 @@ export class ToDoListService{
         if(this.authService.getIsAuthenticated() === true){
                 this.http.post<{message: string}>(`${endPoint}/tasks/task`, newTask).subscribe((jsonData) => {
                     this.getToDoList();
-                    
+
             });
         }
-     
+
 
     }
     //Gets ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,7 +74,7 @@ export class ToDoListService{
     //If its the first time ever getting a list initalises the user with a 'default' list extendable in the future to let people switch lists
     //that list also gets populated with a default task
     //else loads up the users task in their default task
-    //returns this as a JSON seperated list of the Task Model, it also adds a value that gets 
+    //returns this as a JSON seperated list of the Task Model, it also adds a value that gets
     //pushed out to subscribers the Target List so the Database knows which list to add, delete from etc
     getToDoList(){
         if(this.authService.getIsAuthenticated() === true){
@@ -94,11 +93,11 @@ export class ToDoListService{
                 this.toDoListSubject.next(this.toDoList);
             });
         }
-      
+
     }
 
     getTaskIsDone(id:number){
-        let value = this.getSpecificTask(id);
+        const value = this.getSpecificTask(id);
         if(value != -1)
         {
             return this.toDoList[value].isDone;
@@ -115,18 +114,16 @@ export class ToDoListService{
             this.toDoListSubject.next(this.toDoList);
         }
     }
-    
-    
+
+
     getSpecificTask(id : number){
         console.log('attempt specified task find');
         for (let index = 0; index < this.toDoList.length; index++) {
           if(this.toDoList[index].id === id){
-            console.log('found the task');
             return index;
           }
-            
+
         }
-        console.log('no task found');
         return -1;
     }
 }

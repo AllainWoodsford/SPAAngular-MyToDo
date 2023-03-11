@@ -37,6 +37,6 @@ import { AuthInterceptor } from './shared/auth.interceptor';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
+export class AppModule {
 
 }
