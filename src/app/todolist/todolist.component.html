@@ -16,7 +16,7 @@
                             <mat-icon>chat</mat-icon>
                         </button>
                         <button mat-icon-button (click)="onDelete(task.id)" [disabled]="getDone(task.id)">
-                            <mat-icon>delete</mat-icon>
+                            <mat-icon>{{getDeleteButtonIcon(task.id)}}</mat-icon>
                         </button>    
                     </div>
                       

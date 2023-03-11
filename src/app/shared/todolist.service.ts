@@ -16,7 +16,7 @@ export class ToDoListService{
     public toDoListSubject = new Subject<Task[]>();
     //For subscribers to get changes to the list
     public targetListSubject = new Subject<number>();
-
+    private tempTask: Task;
     //storage for tasks for the toDoList to iterate through with an ng for
     private toDoList: Task[] = [];
     //the list we are targeting in the DB
@@ -97,24 +97,36 @@ export class ToDoListService{
       
     }
 
+    getTaskIsDone(id:number){
+        let value = this.getSpecificTask(id);
+        if(value != -1)
+        {
+            return this.toDoList[value].isDone;
+        }
+        return false;
+    }
+
     setTaskDone(id: number, done: boolean){
-        let task = this.getSpecificTask(id);
-        if(task){
-            task.isDone = done;
+        let value = this.getSpecificTask(id);
+        if(value != -1)
+        {
+            console.log('succeeded setting task done');
+            this.toDoList[value].isDone = done;
             this.toDoListSubject.next(this.toDoList);
         }
-      
-
     }
     
     
     getSpecificTask(id : number){
+        console.log('attempt specified task find');
         for (let index = 0; index < this.toDoList.length; index++) {
           if(this.toDoList[index].id === id){
-            return {...this.toDoList[index]};
+            console.log('found the task');
+            return index;
           }
             
         }
-        return null;
+        console.log('no task found');
+        return -1;
     }
 }

@@ -17,7 +17,7 @@ export class TodolistComponent implements OnInit, OnDestroy{
     private authenticationSub: Subscription;
     isAuthenticated = false;
     loggedInUser ='';
-
+    tempTask: Task;
     constructor(private toDoListService: ToDoListService, private router: Router, private authService: AuthService){}
 
     ngOnInit(): void {
@@ -49,13 +49,10 @@ export class TodolistComponent implements OnInit, OnDestroy{
 
     getDone(index: number){
       if(!this.getListInit() ){
-        let task = this.toDoListService.getSpecificTask(index);
-        if(task){
-          return task.isDone;
-        }
-       return false;
+        return this.toDoListService.getTaskIsDone(index);
       }
       else{
+       
         return false;
       }
     }
@@ -69,21 +66,17 @@ export class TodolistComponent implements OnInit, OnDestroy{
       }
     }
 
+    //controls the spinner displaying as its confusing if the list loaded is empty
+    //needs to dissapear if we've at least attempted to load a list
     getListInit(){
       return this.toDoListService.initalized;
    
     }
 
     onDelete(index: number) {
-     if(!this.getDone(index)){
-      
+      //trying to disable on press no luck so far
       this.toDoListService.setTaskDone(index, true);
-      let result = this.toDoListService.onDelete(index);
-      if(!result){
-        this.toDoListService.setTaskDone(index,false);
-      }
-     }
-   
-      
+      this.toDoListService.onDelete(index);
+  
     }
 }
