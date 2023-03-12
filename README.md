@@ -1,4 +1,10 @@
 # Mytodo
+Go to https://project5.woodsford.online/ to run live
+
+Admin is: admin1 , 1234567 || admin2 , 1234567 || admin3 , 1234567
+or p4 , 123456
+
+Register a normal user, password min 7 chars.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.5.
 
