@@ -17,11 +17,11 @@ class TaskQueries {
         try {
             console.log('try to find');
             console.log(data.id);
-            
+
             const foundTask = await this.db.sequelize.models.tasks.findOne({
                 where: {
                     id:data.id
-                 }, 
+                 },
                  attributes: attributes}
              );
             console.log('found success');
@@ -33,7 +33,7 @@ class TaskQueries {
         }
     };
 
-    
+
     //Get All Tasks in a list
     async getAllTasks(data, attributes){
         try {
@@ -41,11 +41,11 @@ class TaskQueries {
                 where: {listId: data},
                 attributes:{attributes}
             });
-         
+
             return allTasks;
         }
         catch(err){
-         
+
             return [];
         }
     };
@@ -59,17 +59,7 @@ class TaskQueries {
                 isDone: data.isDone,
                 isTranslated: data.isTranslated
             });
-
-            if(newTask){
-               
-              
-                return newTask;
-            }
-            else{
-                console.log('Task Creation error');
-                
-                return null;
-            }
+            return newTask;
         }
         catch(err){
             console.log('ERROR IN Create Task block'+ err);
@@ -89,12 +79,12 @@ class TaskQueries {
                 await  foundTask.destroy();
                 console.log('elbow destruction!');
                 return true;
-            }   
-   
+            }
+
             console.log('no destroy');
             return false;
-   
-          
+
+
         } catch {
             console.log('error on destruction!');
             return false;

@@ -6,6 +6,8 @@ import { endPoint } from './api.model';
 
 import { AuthService } from '../shared/auth.service';
 import { Router } from '@angular/router';
+import { json } from 'body-parser';
+import { AuditService } from './audit.service';
 @Injectable({providedIn:'root'})
 
 export class ToDoListService{
@@ -14,7 +16,11 @@ export class ToDoListService{
     //Do we need to get the updated list if our requests fail? probably not.
 
     //CONSTRUCTOR
-    constructor(private http: HttpClient, private authService : AuthService, private router: Router) {}
+    constructor(
+      private http: HttpClient,
+       private authService : AuthService,
+       private auditService : AuditService,
+        private router: Router) {}
 
     //Observable make things more better
     public toDoListSubject = new Subject<Task[]>();
@@ -38,16 +44,15 @@ export class ToDoListService{
     //makes a delete request to the API
     onDelete(index: number){
         if(this.authService.getIsAuthenticated() === true){
-            this.http.delete<{message: string}>(`${endPoint}/tasks/task/` + index).subscribe((jsonData) => {
+            this.http.delete<{code:number,message: string, entity: number, action: string}>(`${endPoint}/tasks/task/` + index).subscribe((jsonData) => {
              this.getToDoList();
-             if(jsonData.message === 'fail'){
-                return false;
+             if(jsonData.code === 200){
+              this.auditService.createAuditEntry(jsonData.entity, this.authService.getLoggedInUser(), jsonData.action);
              }
-             return true;
             });
         }
 
-        return false;
+
     }
 
     //This is a PATCH request
@@ -59,8 +64,11 @@ export class ToDoListService{
     onTranslate(index : number){
       if(this.authService.getIsAuthenticated() === true){
         const data = {id: index};
-        this.http.patch<{message: string}>(`${endPoint}/tasks/task`, data).subscribe((jsonData) => {
+        this.http.patch<{code:number,message: string, entity: number, action: string}>(`${endPoint}/tasks/task`, data).subscribe((jsonData) => {
           this.getToDoList();
+          if(jsonData.code === 200){
+            this.auditService.createAuditEntry(jsonData.entity, this.authService.getLoggedInUser(), jsonData.action);
+           }
         });
       }
     }
@@ -69,15 +77,17 @@ export class ToDoListService{
     //is a protected operation
     onAdd(newTask: Task){
         if(this.authService.getIsAuthenticated() === true){
-                this.http.post<{message: string}>(`${endPoint}/tasks/task`, newTask).subscribe((jsonData) => {
+                this.http.post<{code:number,message: string, entity: number, action: string}>(`${endPoint}/tasks/task`, newTask).subscribe((jsonData) => {
                     this.getToDoList();
+                    if(jsonData.code === 200){
+
+                     this.auditService.createAuditEntry(jsonData.entity, this.authService.getLoggedInUser(), jsonData.action);
+
+                    }
 
             });
         }
-
-
     }
-    //Gets ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     //Gets the subject of the target list so they can subscribe
     //extendable in the future or allows for list switching

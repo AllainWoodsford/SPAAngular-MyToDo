@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { endPoint } from './api.model';
 import { Router } from '@angular/router';
 
+
 @Injectable({providedIn:'root'})
 export class AuthService{
 
@@ -77,6 +78,7 @@ export class AuthService{
             if(res.result === true){
                 this.router.navigate(['/login']);
             }
+
         })
     }
 

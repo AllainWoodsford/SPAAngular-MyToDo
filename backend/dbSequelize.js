@@ -7,7 +7,7 @@ const connect = () => {
     const userName = process.env.PGUSER;
     const password = process.env.PGPASSWORD;
     const database = process.env.PGDATABASE;
-  
+
 
     const sequelize = new Sequelize(database, userName, password, {
         host: hostName,
@@ -22,7 +22,7 @@ const connect = () => {
             acquire: 20000,
             idle: 5000
         },
-       
+
     });
 
     const db = {};
@@ -31,6 +31,7 @@ const connect = () => {
     db.users = require('./model/user')(sequelize, DataTypes, Model);
     db.tasks = require('./model/task')(sequelize, DataTypes, Model);
     db.lists = require('./model/list')(sequelize, DataTypes, Model);
+    db.audits = require('./model/audit')(sequelize, DataTypes, Model);
     return db;
 
 }

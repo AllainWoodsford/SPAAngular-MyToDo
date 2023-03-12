@@ -7,7 +7,6 @@ const saltRounds = 10;
 //Register User
 const register = async (req, res) => {
     try {
-        console.log(req.body);
         const userName = _.toLower(req.body.username).replaceAll(' ','');
         const password = req.body.password;
 
@@ -16,21 +15,19 @@ const register = async (req, res) => {
 
         if(user !== null){
             //We've gotten something back from the database
-            console.log('user exists');
                 //The Database returned some rows for the query of findUser()
                 //Therefor there is a user in the database and the user request should fail
                 res.status(409).json({
+                  code: 409,
                     message:'invalid entry try again'
                 });
         }
         else{
-            console.log('user does not exist continue flow');
             //Continue Registration flow there is no user with the userName the person is asking for
             //Hash the password and salt
             bcrypt.hash(password, saltRounds, async function(err, hash) {
                 if(!err)
                     {
-                        console.log("hashed success");
                           //Attempt to create the user
                           //Pass the Data below into the user.queries.js to the Sequalize Connection
                           let now = Date.now();
@@ -46,11 +43,18 @@ const register = async (req, res) => {
                           const result = await userQueries.createUser(data);
 
                           if(result){
-                            res.status(201).json({result:true});
+                            res.status(200).json({
+                              code: 200,
+                              message: 'Registration Success!',
+                              entity:result.userId,
+                              action: 'Registered themselves',
+                              result:true
+                            });
                           }
                           else{
 
                             res.status(500).json({
+                              code: 500,
                                 result:false
                             })
                           }
@@ -58,6 +62,7 @@ const register = async (req, res) => {
                     else{
                         //Something went wrong
                         res.status(500).json({
+                          code: 500,
                             result:false
                         })
                     }
@@ -66,7 +71,6 @@ const register = async (req, res) => {
 
     } //End Try
     catch(err) {
-        console.log(err.message);
         res.status(500).json({
             error: err.message
         });
@@ -85,7 +89,8 @@ const login = async (req,res) => {
    // .then(user => {
     if(!user)
     {
-        return res.status(401).json({
+        return res.status(404).json({
+            code: 404,
              message: 'invalid credentials'
             });
 
@@ -111,7 +116,11 @@ const login = async (req,res) => {
                     token:token,
                     expiresIn:3600,
                     userid: id,
-                    adminFlag: flag
+                    adminFlag: flag,
+                    code: 200,
+                    message: 'Registration Success!',
+                    entity:userFound.id,
+                    action: 'Logged In'
                 });
 
 
@@ -121,7 +130,10 @@ const login = async (req,res) => {
                 userFound.loginAttempts += 1;
                 await userFound.save();
                 return res.status(401).json({
-                    message: 'invalid credentials'
+                    message: 'invalid credentials',
+                    code: 401,
+                    entity:userFound.id,
+                    action: 'Attempted login'
                 });
             }
         });

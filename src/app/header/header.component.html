@@ -1,19 +1,23 @@
-<header>
+<header class="header">
     <!-- <mat-toolbar class="toolbar" color="primary"> -->
       <div class="toolbar" fxLayout="row">
         <h1>My ToDo's</h1>
 
         <nav>
-        <div fxLayout="row" fxLayoutAlign="space-evenly center" >
-        <ul class="navList">
-            <li *ngIf="!userAuthenticated"><a routerLink="login">Login</a></li>
-            <li *ngIf="!userAuthenticated"><a routerLink="register">Register</a></li>
-            <span *ngIf="getIsAdmin()">
-            <li *ngIf="userAuthenticated" ><a routerLink="admin">Admin</a></li>
-            </span>
-          </ul>
-          <button *ngIf="userAuthenticated" xLayoutAlign="end end" type="submit" (click)="logout()">Logout</button>
-        </div>
+        <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="space-evenly center" >
+          <ul class="navList">
+              <li *ngIf="!userAuthenticated"><a routerLink="login">Login</a></li>
+              <li *ngIf="!userAuthenticated"><a routerLink="register">Register</a></li>
+              <span *ngIf="getIsAdmin()">
+              <li *ngIf="userAuthenticated" ><a routerLink="admin">Admin</a></li>
+              <li *ngIf="userAuthenticated"><a routerLink="/">List</a></li>
+              </span>
+            </ul>
+
+          </div>
+        <button *ngIf="userAuthenticated" xLayoutAlign="end end" type="submit" (click)="logout()">Logout</button>
+      </div>
 
       </nav>
     <!-- </mat-toolbar> -->

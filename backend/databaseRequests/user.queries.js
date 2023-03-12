@@ -6,11 +6,29 @@ class UserQueries {
         this.db = connect();
       //  For Development if { force: true } drops table if it exists incase fields need to change
 
-        // this.db.sequelize.sync({ force: true } ).then(() => {
+        // this.db.sequelize.sync({force:true } ).then(() => {
         //     console.log("Drop and re-sync db.");
         // });
     }
 
+      //Run at register minmised version of find user
+      //Repeating code here refactor later
+      async findUserById(targetUser,attributes){
+        try{
+            const user = await this.db.sequelize.models.users.findOne({
+                where: {
+                    userid: `${targetUser}`
+                },
+                attributes: attributes});
+            if(user){
+                return user;
+            }
+            return null;
+        }
+        catch(err){
+            return null;
+        }
+    }
 
 
     //Run at register minmised version of find user
@@ -27,8 +45,7 @@ class UserQueries {
             return null;
         }
         catch(err){
-            console.log(err);
-            return [];
+            return null;
         }
     }
 
@@ -55,7 +72,6 @@ class UserQueries {
             }
         }
         catch(err){
-            console.log('ERROR IN CATCH BLOCK'+ err);
             return false;
         }
     }

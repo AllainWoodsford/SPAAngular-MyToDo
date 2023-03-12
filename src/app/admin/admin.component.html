@@ -1,1 +1,21 @@
-<p>admin works!</p>
+<div  fxLayout="column"  fxLayoutAlign="center center">
+
+  <h2 class="subheading">Admin View</h2>
+  <table *ngIf="isInit" class="tableContent">
+    <th>username</th>
+    <th>ref</th>
+    <th>entry</th>
+    <th>timestamp</th>
+    <tr *ngFor="let audit of myList; let i = index">
+      <td>{{audit.username}}</td>
+      <td>{{audit.ref}}</td>
+      <td>{{audit.entry}}</td>
+      <td>{{audit.createdAt}}</td>
+    </tr>
+
+  </table>
+  <div *ngIf="!isInit">
+    <mat-spinner></mat-spinner>
+  </div>
+
+</div>

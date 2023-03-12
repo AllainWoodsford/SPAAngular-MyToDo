@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes.js');
 const taskRoutes = require('./routes/taskRoutes.js');
+const auditRoutes = require('./routes/auditRoutes.js');
 const cors = require('cors');
 const helmet = require('helmet');
 
@@ -41,6 +42,8 @@ app.use(cors());
 
 app.use('/auth', authRoutes);
 app.use('/tasks', taskRoutes);
+//using full word because route guard is on /admin
+app.use('/administrator', auditRoutes);
 
 
 //SERVER ~~~~~~~~~~~~~~~~~~~~~~~
